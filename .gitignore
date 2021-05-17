@@ -1,0 +1,6 @@
+data
+MEXimagery
+model_imagery
+trained_models
+.ipynb_checkpoints/
+__pycache__/
