@@ -8,7 +8,7 @@ weights_dict = {}
 for month in os.listdir(os.path.join(os.getcwd(), BASE_DIR)):
     print("Month: ", month)
     for image in os.listdir(os.path.join(os.getcwd(), BASE_DIR, month)):
-        b = image.split("_")[0].split("-")[3]
+        b = image.split("_")[0]#.split("-")[3]
         if b not in weights_dict:
             weights_dict[b] = 1
         else:

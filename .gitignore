@@ -4,3 +4,5 @@ model_imagery
 trained_models
 .ipynb_checkpoints/
 __pycache__/
+epochs
+

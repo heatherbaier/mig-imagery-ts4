@@ -20,7 +20,7 @@ from model_helpers import *
 ROOT_DIR = "./model_imagery"
 MIG_JSON = "./data/migration_data.json"
 WEIGHTS_JSON = "./image_weights.json"
-BATCH_SIZE = 16
+BATCH_SIZE = 64
 
 
 d = MigrationDataset(MIG_JSON, ROOT_DIR, WEIGHTS_JSON)
@@ -35,14 +35,15 @@ val = [(k,v) for k,v in zip(x_val, y_val)]
 train_dl = torch.utils.data.DataLoader(train, batch_size = BATCH_SIZE, shuffle = True)
 val_dl = torch.utils.data.DataLoader(val, batch_size = BATCH_SIZE, shuffle = True)
 
-print(len(train))
-print(len(val))
+print(len(train_dl))
+print(len(val_dl))
 
 print("Done loading imagery.")
 
 plot_inputs(train_dl, ROOT_DIR)
 
 
+hgjf
 
 
 lr = 1e-4
