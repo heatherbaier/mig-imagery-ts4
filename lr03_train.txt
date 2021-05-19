@@ -1,0 +1,309 @@
+Epoch:  0
+  Train:
+    Loss:  124.53174888584742
+    MAE:  183.62296585436783
+    R2:  -0.006866847730235698
+  Val:
+    Loss:  124.13691851326979
+    MAE:  182.17793218312883
+    R2:  0.06353903875807151
+  Saving current weights to epochs folder.
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  1
+  Train:
+    Loss:  121.60140672377061
+    MAE:  179.6999223941816
+    R2:  0.04202689022584725
+  Val:
+    Loss:  122.15844823450597
+    MAE:  178.4222757083137
+    R2:  0.04319421624539925
+  Saving current weights to epochs folder.
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  2
+  Train:
+    Loss:  120.35580921064353
+    MAE:  178.58863644978703
+    R2:  0.051803303575932595
+  Val:
+    Loss:  122.87675470860509
+    MAE:  176.99288335639415
+    R2:  0.028524267646337698
+  Saving current weights to epochs folder.
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  3
+  Train:
+    Loss:  119.54439375763926
+    MAE:  177.8166872297843
+    R2:  0.0525928801205257
+  Val:
+    Loss:  121.9372148926546
+    MAE:  176.85246622698182
+    R2:  0.05788522958755493
+  Saving current weights to epochs folder.
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  4
+  Train:
+    Loss:  118.92521909034465
+    MAE:  177.47215675229313
+    R2:  0.055484362017378885
+  Val:
+    Loss:  120.5435672273397
+    MAE:  177.55181238265678
+    R2:  0.06807015439100852
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  5
+  Train:
+    Loss:  118.51656404478565
+    MAE:  177.08029033874024
+    R2:  0.059162001177549634
+  Val:
+    Loss:  120.53618682218304
+    MAE:  177.9178939854094
+    R2:  0.07690722361240952
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  6
+  Train:
+    Loss:  118.23075342268963
+    MAE:  177.02496090826995
+    R2:  0.061293424942882195
+  Val:
+    Loss:  121.11584749417315
+    MAE:  176.37977318557358
+    R2:  0.054876760972116426
+  Saving current weights to epochs folder.
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  7
+  Train:
+    Loss:  117.67875584174996
+    MAE:  176.76887881062595
+    R2:  0.06279912943261878
+  Val:
+    Loss:  121.15849597035889
+    MAE:  176.38419425460364
+    R2:  0.05750368036550378
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  8
+  Train:
+    Loss:  117.43026812853174
+    MAE:  176.79941402538245
+    R2:  0.06211316961609606
+  Val:
+    Loss:  119.66524821044644
+    MAE:  177.4798985439987
+    R2:  0.08105524831317823
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  9
+  Train:
+    Loss:  117.03755441721471
+    MAE:  176.7110266748919
+    R2:  0.06490592655687902
+  Val:
+    Loss:  119.40820587088687
+    MAE:  176.0533911285748
+    R2:  0.05687239060097783
+  Saving current weights to epochs folder.
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  10
+  Train:
+    Loss:  116.68783692215297
+    MAE:  176.9489563579842
+    R2:  0.06761608978769526
+  Val:
+    Loss:  119.08952999332229
+    MAE:  176.69127609843818
+    R2:  0.07128274848086416
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  11
+  Train:
+    Loss:  116.38427850222325
+    MAE:  176.62140624489635
+    R2:  0.06691675859456368
+  Val:
+    Loss:  119.29714945399951
+    MAE:  176.15208581042452
+    R2:  0.05701197252729759
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  12
+  Train:
+    Loss:  116.06362437585695
+    MAE:  176.38194451790625
+    R2:  0.07042263574538599
+  Val:
+    Loss:  119.2625811018542
+    MAE:  177.1042257843365
+    R2:  0.07843534224125681
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  13
+  Train:
+    Loss:  115.83061973806662
+    MAE:  176.45792693685823
+    R2:  0.07064987669784911
+  Val:
+    Loss:  118.62292617328617
+    MAE:  175.91587690557597
+    R2:  0.06859698178827899
+  Saving current weights to epochs folder.
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  14
+  Train:
+    Loss:  115.66411386864668
+    MAE:  176.4052827110856
+    R2:  0.07116969800276342
+  Val:
+    Loss:  118.53325944609414
+    MAE:  176.26258516420265
+    R2:  0.07318508319539742
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  15
+  Train:
+    Loss:  115.21762382408731
+    MAE:  176.48843826879707
+    R2:  0.07463729182199487
+  Val:
+    Loss:  118.14891507142225
+    MAE:  177.54307385837842
+    R2:  0.08738832729009398
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  16
+  Train:
+    Loss:  115.08144148272373
+    MAE:  176.69892441950023
+    R2:  0.07191014423518977
+  Val:
+    Loss:  118.55273168559498
+    MAE:  177.80601113912456
+    R2:  0.0735814028285902
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  17
+  Train:
+    Loss:  114.8327122611811
+    MAE:  176.09023514286912
+    R2:  0.07318638158089215
+  Val:
+    Loss:  118.18247739057605
+    MAE:  176.87791236060627
+    R2:  0.07563135041462805
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  18
+  Train:
+    Loss:  114.57470113739049
+    MAE:  177.09624369558568
+    R2:  0.07012095108362079
+  Val:
+    Loss:  118.53848665884796
+    MAE:  175.72208089980558
+    R2:  0.05665250370334113
+  Saving current weights to epochs folder.
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  19
+  Train:
+    Loss:  114.13661861455925
+    MAE:  176.34675413136787
+    R2:  0.07282788848206373
+  Val:
+    Loss:  118.53699992620864
+    MAE:  175.84743885570344
+    R2:  0.057659855871917444
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  20
+  Train:
+    Loss:  113.93803058219744
+    MAE:  176.72015031142544
+    R2:  0.07455867601410603
+  Val:
+    Loss:  117.30945130958644
+    MAE:  175.85937131564546
+    R2:  0.07676219193430316
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  21
+  Train:
+    Loss:  113.68913180018866
+    MAE:  176.8221407592727
+    R2:  0.0719996593334701
+  Val:
+    Loss:  118.03907540393038
+    MAE:  176.4722081143112
+    R2:  0.077360051978965
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  22
+  Train:
+    Loss:  113.70510570652264
+    MAE:  176.62137867352303
+    R2:  0.07414460109694744
+  Val:
+    Loss:  117.87728755403488
+    MAE:  177.42373394803198
+    R2:  0.07759881915698562
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  23
+  Train:
+    Loss:  112.95126532565864
+    MAE:  176.87429333421858
+    R2:  0.07363799260805334
+  Val:
+    Loss:  117.80600572990122
+    MAE:  176.0290830607838
+    R2:  0.08695233832187696
+
+
+Bad data:  cannot identify image file './model_imagery/MEX-ADM2-1590546715-B70_2010_7_box515_JUL.png'
+Epoch:  24
+  Train:
+    Loss:  112.51311215843279
+    MAE:  177.12131678582324
+    R2:  0.0741465168278374
+  Val:
+    Loss:  118.41155967625507
+    MAE:  178.67972185834392
+    R2:  0.08437348715536687
+
+
+Best MAE:  175.72208089980558
+Training completed in:  10.620007828157524 hours.

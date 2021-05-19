@@ -13,7 +13,7 @@ import os
 class MigrationDataset(Dataset):
     """Face Landmarks dataset."""
 
-    def __init__(self, mig_json, root_dir, weights_file):
+    def __init__(self, mig_json, root_dir, ref_file):
         
         """
         Args:
@@ -25,27 +25,28 @@ class MigrationDataset(Dataset):
         
         self.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "SEP", "OCT", "NOV", "DEC"]
         self.root_dir = root_dir
-        self.image_names = os.listdir(root_dir)
-        self.image_paths = []
-        self.file_names = []
-        self.migrants = []
-        self.weights = []
+        self.image_names = os.listdir(root_dir)#[0:7000]
+        self.image_paths, self.migrants, self.ref_encodes = [], [], []
+        self.muni_ids = []
+
             
         m = open(mig_json,)
         self.mig_data = json.load(m)
         
-        w = open(weights_file,)
-        self.weight_data = json.load(w)
+        r = open(ref_file,)
+        self.ref_data = json.load(r)
 
         for month in self.months:
             print(month)
             month_images = [im for im in self.image_names if im.endswith(month + ".png")]
             munis = [i.split("_")[0] for i in month_images]
             migs = [self.mig_data[i] if i in self.mig_data.keys() else 0 for i in munis]
-            weights = [1 / self.weight_data[i] if i in self.weight_data.keys() else 0 for i in munis]
+            ref_encodes = [self.ref_data[i] if i in self.ref_data.keys() else [1] * 2269 for i in munis]
+            # weights = [1 / self.weight_data[i] if i in self.weight_data.keys() else 0 for i in munis]
             [self.image_paths.append(i) for i in month_images]
             [self.migrants.append(i) for i in migs]
-            [self.weights.append(i) for i in weights]
+            [self.ref_encodes.append(i) for i in ref_encodes]
+            [self.muni_ids.append(int(i.split("-")[3].strip("B"))) for i in munis]
 
         self.data = [(self.image_paths[i], self.migrants[i]) for i in range(0, len(self.image_paths))]
 
@@ -64,7 +65,7 @@ class MigrationDataset(Dataset):
     
     
     
-def train_test_split(X, y, w, split):
+def train_test_split(X, y, w, r, split):
 
     train_num = int(len(X) * split)
     val_num = int(len(X) - train_num)
@@ -76,8 +77,9 @@ def train_test_split(X, y, w, split):
     x_train, x_val = X[train_indices], X[val_indices]
     y_train, y_val = y[train_indices], y[val_indices]
     w_train, w_val = w[train_indices], w[val_indices]
+    ref_train, ref_val = r[train_indices], r[val_indices]
 
-    return x_train, y_train, x_val, y_val, w_train, w_val
+    return x_train, y_train, x_val, y_val, w_train, w_val, ref_train, ref_val
     
     
     

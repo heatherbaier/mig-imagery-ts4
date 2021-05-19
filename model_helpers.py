@@ -80,9 +80,32 @@ def r2(true, pred):
     return r2
 
 
-def weighted_loss(pred, true, weight):
-    return torch.sum((abs(pred - true) * weight))
+# def weighted_loss(pred, true, weight):
+#     return torch.sum((abs(pred - true) * weight))
 
+#     lossList = []
+#     for municipality in pred:
+#         lossList.append(torch.sum((abs(pred[municipality] - true[municipality]))))
+
+#     loss = sum(lossList)
+    
+    
+    
+def custom_loss(pred, true, ref_ids, model):
+    loss = torch.tensor([0]).to(f'cuda:{model.device_ids[0]}')#.to(device)
+    unique_ids, inverse_indices = torch.unique(torch.tensor(ref_ids, dtype = torch.long), return_inverse=True)
+    for i in unique_ids:
+        indices = (ref_ids == i).nonzero(as_tuple = True)[0]
+        true_vals = torch.squeeze(torch.index_select(true, 0, indices), 1)[0]
+        pred_vals = torch.mean(torch.index_select(pred, 0, indices))
+        cur_diff = pred_vals - true_vals.unsqueeze(0)
+        loss = torch.cat((loss, cur_diff))
+        
+    loss = torch.abs(torch.sum(loss))
+    
+    return loss
+    
+    
 
 def train_model(model, train, val, criterion, optimizer, epochs, batchSize, lr):
 
@@ -93,7 +116,6 @@ def train_model(model, train, val, criterion, optimizer, epochs, batchSize, lr):
 
     val_losses_plot = []
 
-
     for epoch in range(epochs):
 
         for phase in ['train','val']:
@@ -103,10 +125,8 @@ def train_model(model, train, val, criterion, optimizer, epochs, batchSize, lr):
                 c = 1
                 running_train_mae, running_train_loss, running_train_r2 = 0, 0, 0
 
-                for inputs, output, weight in train:
-                    
-#                     print(c)
-                    
+                for inputs, output, encoded_ids, ref_ids in train:
+                                        
                     try:
 
                         if len(inputs) == batchSize:
@@ -114,40 +134,42 @@ def train_model(model, train, val, criterion, optimizer, epochs, batchSize, lr):
                             inputs = [load_inputs(i) for i in list(inputs)]
                             inputs = torch.cat(inputs, dim = 0).to(f'cuda:{model.device_ids[0]}')#.to(device)
                             output = output.to(f'cuda:{model.device_ids[0]}')#.to(device)
-                            weight = weight.to(f'cuda:{model.device_ids[0]}')#.to(device)
+                            encoded_ids = encoded_ids.to(f'cuda:{model.device_ids[0]}')#.to(device)
 
                             inputs = torch.tensor(inputs, dtype = torch.float32, requires_grad = True)
                             output = torch.reshape(torch.tensor(output, dtype = torch.float32, requires_grad = True), (batchSize,1))
-                            weight = torch.reshape(torch.tensor(weight, dtype = torch.float32, requires_grad = True), (batchSize,1))
+                            encoded_ids = torch.reshape(torch.tensor(encoded_ids, dtype = torch.float32, requires_grad = True), (batchSize, 2269))
+                            ref_ids = torch.reshape(torch.tensor(ref_ids, dtype = torch.float32, requires_grad = True), (batchSize, 1)).to(f'cuda:{model.device_ids[0]}')
 
                             # Forward pass
-                            y_pred = model(inputs)
-#                             loss = criterion(y_pred, output)  
-                            loss = weighted_loss(y_pred, output, weight)  
-                            
+                            y_pred = model(inputs, encoded_ids)
+                            loss = custom_loss(y_pred, output, ref_ids, model)
 
                             # Zero gradients, perform a backward pass, and update the weights.
                             optimizer.zero_grad()
                             loss.backward()
                             optimizer.step()
 
+                            # Update all the stats
                             running_train_mae += mae(y_pred, output).item()
                             running_train_loss += loss.item()
                             running_train_r2 += r2(output, y_pred).item()
 
-                            # print(c)
                             c += 1
+                        
                             
                     except Exception as e:
-                        
+
                         print("Bad data: ", e)
+                        
+#                 adjlkasjl
 
             if phase == 'val':
 
                 d = 1
                 running_val_mae, running_val_loss, running_val_r2 = 0, 0, 0
 
-                for inputs, output, weight in val:
+                for inputs, output, encoded_ids, ref_ids in val:
                     
                     try:
 
@@ -156,16 +178,17 @@ def train_model(model, train, val, criterion, optimizer, epochs, batchSize, lr):
                             inputs = [load_inputs(i) for i in list(inputs)]
                             inputs = torch.cat(inputs, dim = 0).to(f'cuda:{model.device_ids[0]}')#.to(device)
                             output = output.to(f'cuda:{model.device_ids[0]}')#.to(device)
-                            weight = weight.to(f'cuda:{model.device_ids[0]}')#.to(device)
+                            encoded_ids = encoded_ids.to(f'cuda:{model.device_ids[0]}')#.to(device)
 
                             inputs = torch.tensor(inputs, dtype = torch.float32, requires_grad = True)
                             output = torch.reshape(torch.tensor(output, dtype = torch.float32, requires_grad = True), (batchSize,1))
-                            weight = torch.reshape(torch.tensor(weight, dtype = torch.float32, requires_grad = True), (batchSize,1))
+                            encoded_ids = torch.reshape(torch.tensor(encoded_ids, dtype = torch.float32, requires_grad = True), (batchSize, 2269))
+                            ref_ids = torch.reshape(torch.tensor(ref_ids, dtype = torch.float32, requires_grad = True), (batchSize, 1)).to(f'cuda:{model.device_ids[0]}')
+
 
                             # Forward pass
-                            y_pred = model(inputs)
-#                             loss = criterion(y_pred, output)
-                            loss = weighted_loss(y_pred, output, weight)
+                            y_pred = model(inputs, encoded_ids)
+                            loss = custom_loss(y_pred, output, ref_ids, model)
 
                             running_val_mae += mae(y_pred, output).item()
                             running_val_loss += loss.item()
@@ -201,7 +224,7 @@ def train_model(model, train, val, criterion, optimizer, epochs, batchSize, lr):
                         'model_state_dict': model.state_dict(),
                         'optimizer_state_dict': optimizer.state_dict(),
                         'loss': criterion,
-                    }, "./epochs/model_nl_epoch" + str(epoch) + "_alldata.torch")
+                    }, "./epochs/model_wl_v4_epoch" + str(epoch) + "_alldata.torch")
 
             print("  Saving current weights to epochs folder.")
         
@@ -224,8 +247,10 @@ def eval(data, model, device):
         try:
             cur_path = obs[0][0]
             cur_true = obs[1]
+            cur_encode = obs[2]
+            cur_encode = torch.reshape(torch.tensor(cur_encode, dtype = torch.float32, requires_grad = True), (1, 2269))
             input = load_inputs(cur_path)
-            pred = model(input.to(device)).item()
+            pred = model(input.to(device), cur_encode.to(device)).item()
             preds.append(pred)
             trues.append(cur_true.item())
             im_paths.append(cur_path)
