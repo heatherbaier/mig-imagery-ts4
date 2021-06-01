@@ -230,13 +230,6 @@ def train_model(model, train, val, criterion, optimizer, epochs, batchSize, lr, 
         if (running_val_mae / d) < best_mae:
             best_mae = (running_val_mae / d)
             best_model_wts = deepcopy(model.state_dict())
-#             torch.save({
-#                         'epoch': epoch,
-#                         'model_state_dict': model.state_dict(),
-#                         'optimizer_state_dict': optimizer.state_dict(),
-#                         'loss': criterion,
-#                     }, "./epochs/model_wl_v4_epoch" + str(epoch) + "_alldata.torch")
-
             print("  Saving current weights to epochs folder.")
         
         print("\n")
@@ -247,6 +240,141 @@ def train_model(model, train, val, criterion, optimizer, epochs, batchSize, lr, 
     print("\n")
 
     return best_model_wts, val_losses_plot
+
+
+
+
+
+def train_model_nocoords(model, train, val, criterion, optimizer, epochs, batchSize, lr, device):
+
+    start_time = time.perf_counter()
+
+    best_mae = 9000000000000000000
+    best_model_wts = deepcopy(model.state_dict())
+
+    val_losses_plot = []
+
+    for epoch in range(epochs):
+
+        for phase in ['train','val']:
+
+            if phase == 'train':
+
+                c = 1
+                running_train_mae, running_train_loss, running_train_r2 = 0, 0, 0
+
+                for inputs, output, encoded_ids, ref_ids, coords in train:
+                                                            
+                    try:
+
+                        # Load inputs
+                        inputs = torch.cat([load_inputs(i) for i in list(inputs)], dim = 0)
+
+                        # Format everything as tensors with correct shape
+                        inputs = torch.tensor(inputs, dtype = torch.float32, requires_grad = True)
+                        output = torch.tensor(output, dtype = torch.float32, requires_grad = True).view(-1, 1)
+                        encoded_ids = torch.tensor(encoded_ids, dtype = torch.float32, requires_grad = True)
+                        ref_ids = torch.tensor(ref_ids, dtype = torch.long).view(-1, 1).to(device)
+
+                        # Send everything to devices
+                        inputs = inputs.to(device)
+                        output = output.to(device)
+                        coords = coords.to(device)
+                        encoded_ids = encoded_ids.to(device)
+
+                        # Forward pass
+                        y_pred = model(inputs, encoded_ids)
+                        loss = custom_loss(y_pred, output, ref_ids, model, device)
+
+                        # Zero gradients, perform a backward pass, and update the weights.
+                        optimizer.zero_grad()
+                        loss.backward()
+                        optimizer.step()
+
+                        # Update all the stats
+        #                     print(muni_mae(y_pred, output, ref_ids, model, device).item())
+                        running_train_mae += muni_mae(y_pred, output, ref_ids, model, device).item()
+                        running_train_loss += loss.item()
+
+                        c += 1
+                    
+                    
+                    
+#                     print("\n")
+                    
+                        
+                            
+                    except Exception as e:
+
+                        print("Bad data: ", e)
+                        
+                        
+            if phase == 'val':
+
+                d = 1
+                running_val_mae, running_val_loss, running_val_r2 = 0, 0, 0
+
+                for inputs, output, encoded_ids, ref_ids, coords in val:
+                    
+                    try:
+
+                        # Load inputs
+                        inputs = torch.cat([load_inputs(i) for i in list(inputs)], dim = 0)
+
+                        # Format everything as tensors with correct shape
+                        inputs = torch.tensor(inputs, dtype = torch.float32, requires_grad = True)
+                        output = torch.tensor(output, dtype = torch.float32, requires_grad = True).view(-1, 1)
+                        encoded_ids = torch.tensor(encoded_ids, dtype = torch.float32, requires_grad = True)
+                        ref_ids = torch.tensor(ref_ids, dtype = torch.long).view(-1, 1).to(device)
+
+                        # Send everything to devices
+                        inputs = inputs.to(device)
+                        output = output.to(device)
+                        coords = coords.to(device)
+                        encoded_ids = encoded_ids.to(device)
+
+                        # Forward pass
+                        y_pred = model(inputs, encoded_ids)
+                        loss = custom_loss(y_pred, output, ref_ids, model, device)
+
+                        running_val_mae += mae(y_pred, output).item()
+                        running_val_loss += loss.item()
+
+                        d += 1
+
+                    except Exception as e:
+                        
+                        print("Bad data: ", e)
+
+                        
+                        
+        print("Epoch: ", epoch)  
+        print("  Train:")
+        print("    Loss: ", running_train_loss / c)      
+        print("    MAE: ", running_train_mae / c)
+        print("  Val:")
+        print("    Loss: ", running_val_loss / d)      
+        print("    MAE: ", running_val_mae / d)
+
+
+        val_losses_plot.append(running_val_loss / d)
+        
+
+        if (running_val_mae / d) < best_mae:
+            best_mae = (running_val_mae / d)
+            best_model_wts = deepcopy(model.state_dict())
+            print("  Saving current weights to epochs folder.")
+        
+        print("\n")
+
+    end_time = time.perf_counter()
+    print("Best MAE: ", best_mae)
+    print("Training completed in: ", ((end_time - start_time) / 60) / 60, "hours.")
+    print("\n")
+
+    return best_model_wts, val_losses_plot
+
+
 
 
 def eval(data, model, device):
