@@ -58,7 +58,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     gB_dir = os.path.join("./data/", args.iso)
-    gb_path = "./data/geo2_mx2010/geo2_mx2010.shp"
+    gb_path = "./data/geo2_mx2010/geo2_mx1960_2015.shp"
 
     print(gb_path)
     

@@ -7,3 +7,6 @@ __pycache__/
 epochs
 MEX2imagery/
 *.csv
+random/
+model_imagery2/
+archive/

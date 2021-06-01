@@ -30,7 +30,11 @@ def main(year, ic, shp, month, iso):
 
     # Make a new directory to organize the imagery
     cur_directory = os.path.join(("./" + iso + "imagery"), str(year), str(month))
-    os.mkdir(cur_directory)
+    
+    try:
+        os.mkdir(cur_directory)
+    except:
+        print("Directory already made.")
 
     boxes_dict = {}
 
@@ -38,49 +42,56 @@ def main(year, ic, shp, month, iso):
     for col, row in shp.iterrows():
 
         try:
+            
+            fname = cur_directory + "/" + row.shapeID + "_" + str(year) + "_" + str(month) + "_" + str(row.c_long) + "_" + str(row.c_lat) + "_box" + str(row.boxID) + ".zip"
+            short_fname = row.shapeID + "_" + str(year) + "_" + str(month) + "_" + str(row.c_long) + "_" + str(row.c_lat) + "_box" + str(row.boxID) + ".zip"
+            
+            if short_fname not in os.listdir(cur_directory):
 
-            # Convert the ADM2 shape to a GEE feature
-            cur_shp = ConvertToFeature(row.geometry)
+                # Convert the ADM2 shape to a GEE feature
+                cur_shp = ConvertToFeature(row.geometry)
 
-            # Dictionary stuff
-            if row.shapeID in boxes_dict.keys():
-                boxes_dict[row.shapeID] += 1
+                # Dictionary stuff
+                if row.shapeID in boxes_dict.keys():
+                    boxes_dict[row.shapeID] += 1
+                else:
+                    boxes_dict[row.shapeID] = 1
+
+                # Grab Landsat 5 Bands 1, 2 and 3 for the current month, year and ADM2
+                l5 = ee.ImageCollection(ic).filterDate(dates[0], dates[1]).filterBounds(cur_shp)
+
+                print(row.shapeID, " has ", l5.size().getInfo(), " images available in ", year)
+
+                # Mosaic the images together using the min (using min to avoid the high values of clouds)
+                m = ee.Algorithms.Landsat.simpleComposite(l5).select(['B3', 'B2', 'B1'])
+
+                m = m.clip(cur_shp)
+
+                # Get the 4 point bounding box of the ADM2 to limit the export region
+                geometry = ee.Geometry.Rectangle(list(row.geometry.bounds))
+
+                # Get the URL download link
+                link = m.getDownloadURL({
+                        'name': row.shapeID + "_" + str(year) + "_" + str(month) + "_" + str(row.c_long) + "_" + str(row.c_lat) + "_box" + str(row.boxID),
+                        'crs': 'EPSG:4326',
+                        'fileFormat': 'GeoTIFF',
+                        'region': geometry,
+                        'scale':30
+                })
+
+                r = requests.get(link, allow_redirects = True)
+
+                open(fname, 'wb').write(r.content)
+                
             else:
-                boxes_dict[row.shapeID] = 1
-
-            # Grab Landsat 5 Bands 1, 2 and 3 for the current month, year and ADM2
-            l5 = ee.ImageCollection(ic).filterDate(dates[0], dates[1]).filterBounds(cur_shp)
-
-            print(row.shapeID, " has ", l5.size().getInfo(), " images available in ", year)
-
-            # Mosaic the images together using the min (using min to avoid the high values of clouds)
-            m = ee.Algorithms.Landsat.simpleComposite(l5).select(['B3', 'B2', 'B1'])
-
-            # Get the 4 point bounding box of the ADM2 to limit the export region
-            geometry = ee.Geometry.Rectangle(list(row.geometry.bounds))
-
-            fname = cur_directory + "/" + row.shapeID + "_" + str(year) + "_" + str(month) + "_box" + str(boxes_dict[row.shapeID]) + ".zip"
-
-            # Get the URL download link
-            link = m.getDownloadURL({
-                    'name': row.shapeID + "_" + str(year) + "_" + str(month),
-                    'crs': 'EPSG:4326',
-                    'fileFormat': 'GeoTIFF',
-                    'region': geometry,
-                    'scale':30
-            })
-
-            r = requests.get(link, allow_redirects=True)
-
-            open(fname, 'wb').write(r.content)
-
-        # except:
-
-        #     print("Imagery not available for ", row.shapeID, " during month ", str(month), " of ", str(year))
-
+                
+                print("Imagery already dowloaded. Skipping.")
 
         except Exception as e:
-            print(e)
+            
+            print("Error: ", e)
+
+
 
 
 

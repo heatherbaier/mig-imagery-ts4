@@ -8,12 +8,12 @@ import os
 def clip_image(im):
     width, height = im.size 
     left, top = 0, 0
-    right, bottom = 120, 120
+    right, bottom = 256, 256
     im1 = im.crop((left, top, right, bottom))     
     return im1
 
 
-IMAGERY_DIR = "MEXimagery/2010/9"
+IMAGERY_DIR = "MEX2imagery/2010/9"
 FULL_DIR = os.path.join(os.getcwd(), IMAGERY_DIR)
 TEMP_DIR = os.path.join(os.getcwd(), "sep_temp")
 dir_length = len(os.listdir(FULL_DIR))
@@ -22,11 +22,11 @@ num = 0
 for zipfolder in os.listdir(FULL_DIR):
     
     try:
-    
+        
         print("Image ", str(num), " of ", str(dir_length), "---- Month: September")
         num += 1
 
-        image_name = zipfolder.split(".")[0]
+        image_name = zipfolder.split(".zip")[0]
 
         # Extract the RGB TIFF files into the temporary directory
         with zipfile.ZipFile(os.path.join(FULL_DIR, zipfolder), 'r') as zip_ref:
@@ -43,10 +43,12 @@ for zipfolder in os.listdir(FULL_DIR):
         PIL_image = Image.fromarray(np.uint8(stack)).convert('RGB')
         PIL_image = clip_image(PIL_image)
 
-        PIL_image.save(os.path.join(os.getcwd(), "model_imagery", (image_name + "_SEP" + ".png")))
+        PIL_image.save(os.path.join(os.getcwd(), "model_imagery2", (image_name + "_SEP" + ".png")))
 
-        [os.remove(os.path.join(TEMP_DIR, i)) for i in os.listdir(TEMP_DIR) if i.startswith("MEX")]
+        [os.remove(os.path.join(TEMP_DIR, i)) for i in os.listdir(TEMP_DIR) if i.startswith("484")]
         
     except:
         
         print("Skipping")
+        
+        

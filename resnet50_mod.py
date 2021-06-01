@@ -19,7 +19,7 @@ class resnet50_mod(torch.nn.Module):
         self.avgpool = resnet.avgpool
         self.fc = resnet.fc
 
-    def forward(self, x, ids):
+    def forward(self, x, ids, coords):
 
         out = self.conv1(x)
         out = self.bn1(out)
@@ -31,11 +31,6 @@ class resnet50_mod(torch.nn.Module):
         out = self.layer4(out)
         out = self.avgpool(out)
         out = out.flatten(start_dim=1)
-        out = torch.cat((out, ids), dim = 1)
-#         print(ids)
-#         print(out)
-#         print(torch.cat((out, ids), dim = 1))
-#         print(.shape)
+        out = torch.cat((out, ids, coords), dim = 1)
         out = self.fc(out)
-        
         return out

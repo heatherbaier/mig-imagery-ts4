@@ -25,9 +25,10 @@ class MigrationDataset(Dataset):
         
         self.months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "SEP", "OCT", "NOV", "DEC"]
         self.root_dir = root_dir
-        self.image_names = os.listdir(root_dir)#[0:7000]
+        self.image_names = os.listdir(root_dir)#[0:500]
         self.image_paths, self.migrants, self.ref_encodes = [], [], []
         self.muni_ids = []
+        self.coords = []
 
             
         m = open(mig_json,)
@@ -42,11 +43,14 @@ class MigrationDataset(Dataset):
             munis = [i.split("_")[0] for i in month_images]
             migs = [self.mig_data[i] if i in self.mig_data.keys() else 0 for i in munis]
             ref_encodes = [self.ref_data[i] if i in self.ref_data.keys() else [1] * 2269 for i in munis]
+#             coords = 
+#             print(coords)
             # weights = [1 / self.weight_data[i] if i in self.weight_data.keys() else 0 for i in munis]
             [self.image_paths.append(i) for i in month_images]
             [self.migrants.append(i) for i in migs]
             [self.ref_encodes.append(i) for i in ref_encodes]
-            [self.muni_ids.append(int(i.split("-")[3].strip("B"))) for i in munis]
+            [self.muni_ids.append(int(i.split("_")[0])) for i in munis]
+            [self.coords.append(i.split("_")[3:5]) for i in month_images]
 
         self.data = [(self.image_paths[i], self.migrants[i]) for i in range(0, len(self.image_paths))]
 
@@ -65,7 +69,7 @@ class MigrationDataset(Dataset):
     
     
     
-def train_test_split(X, y, w, r, split):
+def train_test_split(X, y, w, r, c, split):
 
     train_num = int(len(X) * split)
     val_num = int(len(X) - train_num)
@@ -78,8 +82,26 @@ def train_test_split(X, y, w, r, split):
     y_train, y_val = y[train_indices], y[val_indices]
     w_train, w_val = w[train_indices], w[val_indices]
     ref_train, ref_val = r[train_indices], r[val_indices]
+    c_train, c_val = c[train_indices], c[val_indices]
 
-    return x_train, y_train, x_val, y_val, w_train, w_val, ref_train, ref_val
+    return x_train, y_train, x_val, y_val, w_train, w_val, ref_train, ref_val, c_train, c_val
+
+
+
+
+# ROOT_DIR = "./model_imagery2"
+# MIG_JSON = "./data/migration_data.json"
+# WEIGHTS_JSON = "./data/encoded_munis.json"
+# BATCH_SIZE = 256
+
+
+# d = MigrationDataset(MIG_JSON, ROOT_DIR, WEIGHTS_JSON)
+
+
+# print(d.data)
+# print(d.muni_ids)
+# print(d.coords)
+
     
     
     
